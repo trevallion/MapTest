@@ -25,8 +25,11 @@ class MapPinFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MapViewModel::class.java)
-        // TODO: Use the ViewModel
+
+        val application = requireNotNull(this.activity).application
+        val viewModelFactory = MapViewModelFactory(application)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MapViewModel::class.java)
     }
 
 }

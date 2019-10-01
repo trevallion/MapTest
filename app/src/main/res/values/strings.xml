@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MapTest</string>
+    <string name="mapbox_api_key">pk.eyJ1IjoidHJldmFsbGlvbiIsImEiOiJjazE4ZHFreTkxcGljM25wa3U3Z2FqZnY4In0.Mqa6gVh8eqLEpZDYD2xu4A</string>
 </resources>

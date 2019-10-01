@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
-private const val BASE_URL = "https://annetog.gotenna.com/development/scripts/get_map_pins.php"
+private const val BASE_URL = "https://annetog.gotenna.com/development/scripts/"
 
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
@@ -22,7 +22,7 @@ private const val BASE_URL = "https://annetog.gotenna.com/development/scripts/ge
         .build()
 
     interface MapApiService {
-        @GET
+        @GET("get_map_pins.php")
         fun getPins(): Deferred<List<MapPin>>
     }
 

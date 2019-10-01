@@ -38,7 +38,6 @@ class MapPinRepository private constructor(val database : MapPinDatabaseDao) {
                 }
             }
         }
-
         _pins.value = newPins
     }
 
@@ -46,7 +45,7 @@ class MapPinRepository private constructor(val database : MapPinDatabaseDao) {
         private lateinit var instance : MapPinRepository
 
         fun getInstance(context: Context) : MapPinRepository {
-            if(instance == null){
+            if(!this::instance.isInitialized){
                 val dao = MapPinDatabase.getInstance(context).mapPinDatabaseDao
                 instance = MapPinRepository(dao)
             }
