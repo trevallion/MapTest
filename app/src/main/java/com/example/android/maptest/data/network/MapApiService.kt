@@ -23,7 +23,7 @@ private const val BASE_URL = "https://annetog.gotenna.com/development/scripts/ge
 
     interface MapApiService {
         @GET
-        fun getProperties(): Deferred<List<MapPin>>
+        fun getPins(): Deferred<List<MapPin>>
     }
 
     object MapApi {

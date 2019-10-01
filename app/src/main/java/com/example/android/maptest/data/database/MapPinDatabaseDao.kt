@@ -13,6 +13,9 @@ interface MapPinDatabaseDao {
     @Insert
     fun insert(mapPin: MapPin)
 
+    @Insert
+    fun insert(mapPins: List<MapPin>)
+
     @Update
     fun update(mapPin: MapPin)
 
