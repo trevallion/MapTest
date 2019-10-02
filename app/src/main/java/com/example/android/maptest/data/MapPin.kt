@@ -1,9 +1,12 @@
 package com.example.android.maptest.data
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "map_pin_table")
 data class MapPin(
     @PrimaryKey
@@ -12,5 +15,5 @@ data class MapPin(
     val latitude: Double,
     val longitude: Double,
     val description: String
-) {
+) : Parcelable {
 }

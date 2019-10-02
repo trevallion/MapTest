@@ -3,18 +3,30 @@ package com.example.android.maptest.ui.map
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.get
+import androidx.lifecycle.Observer
 import com.example.android.maptest.R
+import com.example.android.maptest.data.MapPin
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.annotations.Marker
+import com.mapbox.mapboxsdk.annotations.MarkerOptions
+import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapView
+import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 
 class MapPinFragment : Fragment() {
 
     private var mapView: MapView? = null
+    private var mapboxMap : MapboxMap? = null
 
     companion object {
         fun newInstance() = MapPinFragment()
@@ -41,6 +53,33 @@ class MapPinFragment : Fragment() {
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync { map ->
             map.setStyle(Style.MAPBOX_STREETS)
+            mapboxMap = map
+        }
+
+        viewModel.pins.observe(this, Observer {mapPins ->
+            onMapPinsUpdated(mapPins)
+        })
+
+    }
+
+    private fun onMapPinsUpdated(mapPins : List<MapPin>?){
+        if(mapPins != null && mapPins.isNotEmpty()) {
+            mapView?.getMapAsync { map ->
+                val boundsBuilder : LatLngBounds.Builder = LatLngBounds.Builder()
+                for (mapPin in mapPins) {
+                    val latLng = LatLng(mapPin.latitude, mapPin.longitude)
+                    boundsBuilder.include(latLng)
+                    map?.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .title(mapPin.name)
+                    )
+                }
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100))
+            }
+        }
+        else{
+            Log.e("MapPinFragment","Map pins must not be null or empty!")
         }
     }
 

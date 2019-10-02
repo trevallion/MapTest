@@ -26,5 +26,5 @@ interface MapPinDatabaseDao {
     fun clear()
 
     @Query("SELECT * FROM map_pin_table ORDER BY id DESC")
-    fun getAllMapPins():LiveData<List<MapPin>>
+    fun getAllMapPins():List<MapPin>
 }
