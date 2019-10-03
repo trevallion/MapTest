@@ -10,6 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.get
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.android.maptest.R
 import com.example.android.maptest.data.MapPin
 import com.mapbox.mapboxsdk.Mapbox
@@ -47,6 +51,12 @@ class MapPinFragment : Fragment() {
         val application = requireNotNull(this.activity).application
         val viewModelFactory = MapViewModelFactory(application)
 
+        val layoutManager = LinearLayoutManager(application, LinearLayoutManager.HORIZONTAL, false)
+        val snapHelper = LinearSnapHelper()
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView?.layoutManager = layoutManager
+        snapHelper.attachToRecyclerView(recyclerView)
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MapViewModel::class.java)
 
         mapView = view?.findViewById(R.id.mapView)
@@ -54,10 +64,13 @@ class MapPinFragment : Fragment() {
         mapView?.getMapAsync { map ->
             map.setStyle(Style.MAPBOX_STREETS)
             mapboxMap = map
+            MapPinAdapter.setMapboxMap(map)
         }
 
         viewModel.pins.observe(this, Observer {mapPins ->
             onMapPinsUpdated(mapPins)
+            val adapter = MapPinAdapter(mapPins, application)
+            recyclerView?.adapter = adapter
         })
 
     }
