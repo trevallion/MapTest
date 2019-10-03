@@ -16,6 +16,9 @@ import kotlinx.android.synthetic.main.map_pin_list_item.view.*
 
 class MapPinAdapter(private val pins: List<MapPin>, private val context: Context) :
     RecyclerView.Adapter<ViewHolder>(), PinClickListener {
+
+    // Companion object so the adapter can scroll the map when a card is clicked.
+    // Would be better to do this as a callback.
     companion object {
         private var mapboxMap: MapboxMap? = null
 
@@ -37,8 +40,8 @@ class MapPinAdapter(private val pins: List<MapPin>, private val context: Context
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder?.nameView?.text = pins.get(position).name
-        holder?.descriptionView?.text = pins.get(position).description
+        holder.nameView?.text = pins.get(position).name
+        holder.descriptionView?.text = pins.get(position).description
     }
 
     override fun onClick(position: Int) {
@@ -54,7 +57,7 @@ class MapPinAdapter(private val pins: List<MapPin>, private val context: Context
 class ViewHolder(view: View, val clickListener: PinClickListener) : RecyclerView.ViewHolder(view),
     View.OnClickListener {
     override fun onClick(v: View?) {
-        clickListener?.onClick(layoutPosition)
+        clickListener.onClick(layoutPosition)
     }
 
     val nameView: TextView = view.name_text

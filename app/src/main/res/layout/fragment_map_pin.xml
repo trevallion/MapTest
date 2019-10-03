@@ -6,7 +6,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.map.MapPinFragment">
+    tools:context=".ui.map.MapPinFragment"
+    android:clipChildren="false">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
@@ -26,6 +27,8 @@
         android:layout_gravity="bottom"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"/>
 
 </FrameLayout>

@@ -49,16 +49,19 @@ class MapPinFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val application = requireNotNull(this.activity).application
-        val viewModelFactory = MapViewModelFactory(application)
 
+        // Setup recycler view
         val layoutManager = LinearLayoutManager(application, LinearLayoutManager.HORIZONTAL, false)
         val snapHelper = LinearSnapHelper()
         val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView?.layoutManager = layoutManager
         snapHelper.attachToRecyclerView(recyclerView)
 
+        // Setup view model
+        val viewModelFactory = MapViewModelFactory(application)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MapViewModel::class.java)
 
+        // Setup map view.
         mapView = view?.findViewById(R.id.mapView)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync { map ->
@@ -67,6 +70,7 @@ class MapPinFragment : Fragment() {
             MapPinAdapter.setMapboxMap(map)
         }
 
+        // Observe LiveData in view model.
         viewModel.pins.observe(this, Observer {mapPins ->
             onMapPinsUpdated(mapPins)
             val adapter = MapPinAdapter(mapPins, application)
@@ -75,14 +79,19 @@ class MapPinFragment : Fragment() {
 
     }
 
+    // This logic should be moved to the view model.
     private fun onMapPinsUpdated(mapPins : List<MapPin>?){
         if(mapPins != null && mapPins.isNotEmpty()) {
             mapView?.getMapAsync { map ->
+                // Clear all existing pins first.
+                // It would be better to track pins as live data and insert and remove them as
+                // the source data changes instead of updating them all at once.
+                map.clear()
                 val boundsBuilder : LatLngBounds.Builder = LatLngBounds.Builder()
                 for (mapPin in mapPins) {
                     val latLng = LatLng(mapPin.latitude, mapPin.longitude)
                     boundsBuilder.include(latLng)
-                    map?.addMarker(
+                    map.addMarker(
                         MarkerOptions()
                             .position(latLng)
                             .title(mapPin.name)
@@ -90,9 +99,6 @@ class MapPinFragment : Fragment() {
                 }
                 map.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100))
             }
-        }
-        else{
-            Log.e("MapPinFragment","Map pins must not be null or empty!")
         }
     }
 
